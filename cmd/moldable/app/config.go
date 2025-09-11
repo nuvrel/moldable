@@ -3,7 +3,6 @@ package app
 import (
 	"errors"
 	"fmt"
-	"go/build"
 	"go/token"
 	"strings"
 	"unicode"
@@ -110,10 +109,6 @@ type Package struct {
 func (p Package) check() error {
 	if strings.TrimSpace(p.Path) == "" {
 		return errors.New("package path is required")
-	}
-
-	if _, err := build.Import(p.Path, "", build.FindOnly); err != nil {
-		return fmt.Errorf("the package is not included in your project module")
 	}
 
 	return nil
