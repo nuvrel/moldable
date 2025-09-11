@@ -7,6 +7,8 @@ import (
 	"github.com/nuvrel/moldable/cmd/moldable/app"
 	"github.com/nuvrel/moldable/internal/command"
 	"github.com/nuvrel/moldable/internal/config"
+	"github.com/nuvrel/moldable/internal/generator"
+	"github.com/nuvrel/moldable/internal/reporter"
 	"github.com/spf13/cobra"
 )
 
@@ -23,7 +25,13 @@ func NewRoot(l *log.Logger) command.Runnable {
 			return fmt.Errorf("checking config: %w", err)
 		}
 
-		l.Info("moldable", "config", cfg)
+		gen := generator.New(cfg, reporter.NewLog(l))
+
+		if err := gen.Generate(); err != nil {
+			return fmt.Errorf("generating interfaces: %w", err)
+		}
+
+		l.Info("interfaces generated successfully")
 
 		return nil
 	}
