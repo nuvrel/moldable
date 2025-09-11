@@ -3,6 +3,7 @@ package runnable
 import (
 	"fmt"
 
+	"github.com/charmbracelet/lipgloss"
 	"github.com/charmbracelet/log"
 	"github.com/nuvrel/moldable/cmd/moldable/app"
 	"github.com/nuvrel/moldable/internal/command"
@@ -33,6 +34,22 @@ func NewRoot(l *log.Logger) command.Runnable {
 
 		l.Info("interfaces generated successfully")
 
+		banner()
+
 		return nil
 	}
+}
+
+func banner() {
+	fmt.Println()
+	fmt.Println(
+		lipgloss.NewStyle().
+			Bold(true).
+			Border(lipgloss.RoundedBorder()).
+			BorderForeground(lipgloss.Color("86")).
+			Padding(1, 3).
+			Align(lipgloss.Center).
+			Render("⭐ Star us on GitHub → https://github.com/nuvrel/moldable"),
+	)
+	fmt.Println()
 }
