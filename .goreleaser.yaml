@@ -1,0 +1,36 @@
+---
+version: 2
+
+env:
+  - CGO_ENABLED=0
+
+builds:
+  - main: ./cmd/moldable
+    ldflags:
+      - -s -w
+      - -X github.com/nuvrel/moldable/pkg/version.version={{.Version}}
+      - -X github.com/nuvrel/moldable/pkg/version.commit={{.Commit}}
+      - -X github.com/nuvrel/moldable/pkg/version.date={{.Date}}
+    goos:
+      - darwin
+      - linux
+      - windows
+    goarch:
+      - amd64
+      - arm64
+
+archives:
+  - wrap_in_directory: true
+    format_overrides:
+      - goos: windows
+        formats:
+          - zip
+    files:
+      - LICENSE.md
+      - README.md
+
+checksum:
+  name_template: checksums.txt
+
+changelog:
+  use: github-native
