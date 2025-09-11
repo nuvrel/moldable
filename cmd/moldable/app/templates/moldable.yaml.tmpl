@@ -1,0 +1,24 @@
+---
+# Output configuration for generated interface files
+output:
+  # Directory where generated files will be written
+  dir: ./generated
+
+  # Package name for generated code (singular noun following Go conventions)
+  package: contract
+
+  # File naming pattern for generated files
+  # Uses {package} placeholder for the original package name
+  filename: "{package}.generated.go"
+
+  # Naming conventions for generated interfaces
+  naming:
+    # Suffix for interface names (e.g., "Contract" for "ClientContract")
+    suffix: Contract
+
+# Packages to process
+packages:
+  - path: github.com/example/package/foo
+
+  # Additional packages
+  # - path: github.com/example/package/bar
