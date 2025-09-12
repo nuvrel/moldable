@@ -17,10 +17,14 @@ func Traverse(typ types.Type, fn Func) {
 	case *types.Map:
 		Traverse(t.Key(), fn)
 		Traverse(t.Elem(), fn)
-	case *types.Pointer:
-		Traverse(t.Elem(), fn)
 	case *types.Chan:
 		Traverse(t.Elem(), fn)
+	case *types.Pointer:
+		Traverse(t.Elem(), fn)
+	case *types.Interface:
+		for i := range t.NumEmbeddeds() {
+			Traverse(t.EmbeddedType(i), fn)
+		}
 	case *types.Signature:
 		if params := t.Params(); params != nil {
 			for i := range params.Len() {
@@ -36,12 +40,6 @@ func Traverse(typ types.Type, fn Func) {
 	case *types.Named:
 		if pkg := t.Obj().Pkg(); pkg != nil {
 			fn(pkg)
-		}
-
-		if tl := t.TypeArgs(); tl != nil {
-			for i := range tl.Len() {
-				Traverse(tl.At(i), fn)
-			}
 		}
 	case *types.Alias:
 		if pkg := t.Obj().Pkg(); pkg != nil {
