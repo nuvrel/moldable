@@ -1,5 +1,9 @@
 # moldable 🔧
 
+![Codecov](https://img.shields.io/codecov/c/github/nuvrel/moldable?token=TVYGWXRKB9&style=social)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/nuvrel/moldable/test?style=social)
+![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/nuvrel/moldable/total?style=social)
+
 `moldable` builds precise interfaces from any package so you can plug in `mockery`, `gomock`, `moq`, or any other mock tool you like.
 
 > [!WARNING]
