@@ -8,6 +8,8 @@ import (
 	"strconv"
 )
 
+// TODO(calmondev): return typed errors to reuse in tests instead of relying on
+// text alone
 func Convert(typ types.Type, qual types.Qualifier) (ast.Expr, error) {
 	if typ == nil {
 		return nil, fmt.Errorf("cannot convert nil type")
@@ -54,7 +56,7 @@ func convertBasic(b *types.Basic) (ast.Expr, error) {
 }
 
 func convertStruct() (ast.Expr, error) {
-	return nil, fmt.Errorf("anonymous struct inside signature")
+	return nil, fmt.Errorf("struct is not supported")
 }
 
 func convertArray(arr *types.Array, qual types.Qualifier) (ast.Expr, error) {
@@ -134,7 +136,7 @@ func convertPointer(ptr *types.Pointer, qual types.Qualifier) (ast.Expr, error) 
 
 func convertInterface(iface *types.Interface) (ast.Expr, error) {
 	if !iface.Empty() {
-		return nil, fmt.Errorf("interface type with methods inside signature")
+		return nil, fmt.Errorf("non-empty interface is not supported")
 	}
 
 	return ast.NewIdent("any"), nil
@@ -151,17 +153,11 @@ func convertSignature(sig *types.Signature, qual types.Qualifier) (ast.Expr, err
 		return nil, fmt.Errorf("converting signature results: %w", err)
 	}
 
-	if sig.Variadic() && params.NumFields() > 0 {
+	if sig.Variadic() {
 		last := params.List[len(params.List)-1]
 
-		slice, ok := last.Type.(*ast.ArrayType)
-
-		if !ok || slice.Len != nil {
-			return nil, fmt.Errorf("variadic parameter in signature must be a slice")
-		}
-
 		last.Type = &ast.Ellipsis{
-			Elt: slice.Elt,
+			Elt: last.Type.(*ast.ArrayType).Elt,
 		}
 	}
 
@@ -172,7 +168,7 @@ func convertSignature(sig *types.Signature, qual types.Qualifier) (ast.Expr, err
 }
 
 func convertTuple(tup *types.Tuple, qual types.Qualifier) (*ast.FieldList, error) {
-	if tup == nil || tup.Len() == 0 {
+	if tup == nil {
 		return &ast.FieldList{}, nil
 	}
 
@@ -198,27 +194,11 @@ func convertTuple(tup *types.Tuple, qual types.Qualifier) (*ast.FieldList, error
 }
 
 func convertNamed(n *types.Named, qual types.Qualifier) (ast.Expr, error) {
-	expr, err := convertTypeRef(n.Obj(), n.TypeArgs(), qual)
-	if err != nil {
-		return nil, fmt.Errorf("converting type ref for named %q: %w", n.Obj().Name(), err)
-	}
-
-	return expr, nil
+	return qualifyTypeName(n.Obj(), qual), nil
 }
 
-func convertTypeRef(tn *types.TypeName, tl *types.TypeList, qual types.Qualifier) (ast.Expr, error) {
-	base := qualifyTypeName(tn, qual)
-
-	if tl.Len() > 0 {
-		expr, err := applyTypeArgs(base, tl, qual)
-		if err != nil {
-			return nil, fmt.Errorf("applying type args: %w", err)
-		}
-
-		return expr, nil
-	}
-
-	return base, nil
+func convertAlias(a *types.Alias, qual types.Qualifier) (ast.Expr, error) {
+	return qualifyTypeName(a.Obj(), qual), nil
 }
 
 func qualifyTypeName(tn *types.TypeName, qual types.Qualifier) ast.Expr {
@@ -232,40 +212,6 @@ func qualifyTypeName(tn *types.TypeName, qual types.Qualifier) ast.Expr {
 	}
 
 	return id
-}
-
-func applyTypeArgs(base ast.Expr, tl *types.TypeList, qual types.Qualifier) (ast.Expr, error) {
-	indexes := make([]ast.Expr, tl.Len())
-
-	for i := range tl.Len() {
-		index, err := convert(tl.At(i), qual)
-		if err != nil {
-			return nil, fmt.Errorf("converting type arg %d: %w", i, err)
-		}
-
-		indexes[i] = index
-	}
-
-	if len(indexes) == 1 {
-		return &ast.IndexExpr{
-			X:     base,
-			Index: indexes[0],
-		}, nil
-	}
-
-	return &ast.IndexListExpr{
-		X:       base,
-		Indices: indexes,
-	}, nil
-}
-
-func convertAlias(a *types.Alias, qual types.Qualifier) (ast.Expr, error) {
-	expr, err := convertTypeRef(a.Obj(), a.TypeArgs(), qual)
-	if err != nil {
-		return nil, fmt.Errorf("converting type ref for alias %q: %w", a.Obj().Name(), err)
-	}
-
-	return expr, nil
 }
 
 func convertTypeParam(tp *types.TypeParam) (ast.Expr, error) {

@@ -1,4 +1,5 @@
 dist/
 generated/
+coverage.html
 coverage.txt
 moldable.yaml
