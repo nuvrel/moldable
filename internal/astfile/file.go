@@ -16,8 +16,9 @@ type ImportSpec struct {
 }
 
 type InterfaceSpec struct {
-	Name    string
-	Methods []*types.Func
+	Name       string
+	TypeParams *types.TypeParamList
+	Methods    []*types.Func
 }
 
 type File struct {
@@ -116,11 +117,17 @@ func (f *File) buildInterfaces(qual types.Qualifier) ([]ast.Decl, error) {
 			})
 		}
 
+		tp, err := typeast.ConvertTypeParams(is.TypeParams, qual)
+		if err != nil {
+			return nil, fmt.Errorf("converting type params: %w", err)
+		}
+
 		decls = append(decls, &ast.GenDecl{
 			Tok: token.TYPE,
 			Specs: []ast.Spec{
 				&ast.TypeSpec{
-					Name: ast.NewIdent(is.Name),
+					Name:       ast.NewIdent(is.Name),
+					TypeParams: tp,
 					Type: &ast.InterfaceType{
 						Methods: &ast.FieldList{
 							List: methods,

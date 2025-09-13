@@ -186,17 +186,10 @@ func convertTuple(tup *types.Tuple, qual types.Qualifier) (*ast.FieldList, error
 			return nil, fmt.Errorf("converting tuple field %d: %w", i, err)
 		}
 
-		f := &ast.Field{
-			Type: typ,
+		list[i] = &ast.Field{
+			Names: []*ast.Ident{ast.NewIdent(v.Name())},
+			Type:  typ,
 		}
-
-		if name := v.Name(); name != "" {
-			f.Names = []*ast.Ident{
-				ast.NewIdent(name),
-			}
-		}
-
-		list[i] = f
 	}
 
 	return &ast.FieldList{
@@ -319,4 +312,30 @@ func convertUnionTerm(t *types.Term, qual types.Qualifier) (ast.Expr, error) {
 	}
 
 	return expr, nil
+}
+
+func ConvertTypeParams(tpl *types.TypeParamList, qual types.Qualifier) (*ast.FieldList, error) {
+	if tpl == nil {
+		return nil, nil
+	}
+
+	list := make([]*ast.Field, tpl.Len())
+
+	for i := range tpl.Len() {
+		tp := tpl.At(i)
+
+		typ, err := convert(tp.Constraint(), qual)
+		if err != nil {
+			return nil, fmt.Errorf("converting type param constraint %d: %w", i, err)
+		}
+
+		list[i] = &ast.Field{
+			Names: []*ast.Ident{ast.NewIdent(tp.Obj().Name())},
+			Type:  typ,
+		}
+	}
+
+	return &ast.FieldList{
+		List: list,
+	}, nil
 }

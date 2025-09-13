@@ -80,8 +80,9 @@ func (g Generator) processPackage(pkg *types.Package) error {
 		name := ss.TypeName.Name() + g.config.Output.Naming.Suffix
 
 		builder.AddInterface(&astfile.InterfaceSpec{
-			Name:    name,
-			Methods: ss.Methods,
+			Name:       name,
+			TypeParams: ss.TypeParams,
+			Methods:    ss.Methods,
 		})
 
 		g.reporter.GeneratedInterface(name, ss.TypeName.Name(), len(ss.Methods))
