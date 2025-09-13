@@ -1,8 +1,10 @@
 # moldable 🔧
 
-![Codecov](https://img.shields.io/codecov/c/github/nuvrel/moldable?token=TVYGWXRKB9&style=social)
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/nuvrel/moldable/test?style=social)
-![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/nuvrel/moldable/total?style=social)
+![Codecov](https://img.shields.io/codecov/c/github/nuvrel/moldable?token=TVYGWXRKB9)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/nuvrel/moldable/test.yaml)
+![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/nuvrel/moldable/total)
+![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/nuvrel/moldable)
+[![Go Report Card](https://goreportcard.com/badge/github.com/nuvrel/moldable)](https://goreportcard.com/report/github.com/nuvrel/moldable)
 
 `moldable` builds precise interfaces from any package so you can plug in `mockery`, `gomock`, `moq`, or any other mock tool you like.
 
@@ -44,7 +46,7 @@ Pick the flow that best fits your environment.
 ### Using `go install`
 
 > [!WARNING]
-> Requires a Go installation **at least as new as the version declared in moldable's [go.mod](go.mod)**.
+> Requires a Go installation **at least as new as the version declared in [go.mod](go.mod)**.
 
 Install the latest tag:
 
