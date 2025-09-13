@@ -29,12 +29,22 @@ Most mock generators need an interface to do anything. When a library only expos
 
 Pick the flow that best fits your environment.
 
-### Download a release
+### Download a release (fastest, always works)
+
+> [!NOTE]
+> **Why a binary?**
+>
+> `moldable` is built with the newest Go release so it can parse the newest language features. If the Go installation on your machine is older than the version declared in [`go.mod`](go.mod), `go install` will refuse to build it.
+>
+> Pre-built binaries bypass that check and run on any OS/arch we ship.
 
 1. Grab the latest binary from the [releases page](https://github.com/nuvrel/moldable/releases).
 2. Extract and move the executable to any directory in your `$PATH`.
 
-### Using `go install` (Go 1.16+)
+### Using `go install`
+
+> [!WARNING]
+> Requires a Go installation **at least as new as the version declared in moldable's [go.mod](go.mod)**.
 
 Install the latest tag:
 
@@ -52,38 +62,6 @@ Check the result:
 
 ```bash
 moldable version
-```
-
-### Using `go tool` (Go 1.24+)
-
-> [!TIP]
-> **Recommended for projects**
->
-> Inside a Go module this keeps the exact binary version in `go.mod`, so every teammate and CI runner gets the same `moldable` without touching `$PATH`.
->
-> Upgrade later with one command: `go get -tool github.com/nuvrel/moldable@v1.0.0` (replace `v1.0.0` with the latest version).
-
-Add the tool to the current module (recorded in `go.mod` under a new `tool` directive):
-
-```bash
-go get -tool github.com/nuvrel/moldable/cmd/moldable@v1.0.0
-```
-
-Run it through the built-in tool command (no `$PATH` edits, version locked per module):
-
-```bash
-go tool moldable init
-go tool moldable
-```
-
-List or locate the cached binary:
-
-```bash
-# absolute path
-go tool -n moldable
-
-# list every tool declared in the module
-go tool
 ```
 
 ## Getting Started
