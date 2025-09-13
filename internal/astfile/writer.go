@@ -18,12 +18,10 @@ func NewWriter() *Writer {
 	return &Writer{}
 }
 
-func (Writer) Write(file *ast.File, path string) error {
+func (Writer) Write(fset *token.FileSet, file *ast.File, path string) error {
 	if err := os.MkdirAll(filepath.Dir(path), 0755); err != nil {
 		return fmt.Errorf("creating directory: %w", err)
 	}
-
-	fset := token.NewFileSet()
 
 	var buf bytes.Buffer
 

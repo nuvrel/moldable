@@ -2,6 +2,7 @@ package generator
 
 import (
 	"fmt"
+	"go/token"
 	"go/types"
 	"path/filepath"
 	"strings"
@@ -57,7 +58,13 @@ func (g Generator) Generate() error {
 func (g Generator) processPackage(pkg *types.Package) error {
 	g.reporter.ProcessingPackage(pkg.Path())
 
-	builder := astfile.New(g.config.Output.Package)
+	filename := strings.ReplaceAll(g.config.Output.Filename, "{package}", pkg.Name())
+
+	fset := token.NewFileSet()
+
+	fset.AddFile(filename, fset.Base(), 1)
+
+	builder := astfile.New(fset, g.config.Output.Package)
 
 	is := importset.New()
 	is.Import(pkg)
@@ -106,12 +113,9 @@ func (g Generator) processPackage(pkg *types.Package) error {
 		return fmt.Errorf("building ast file: %w", err)
 	}
 
-	path := filepath.Join(
-		g.config.Output.Dir,
-		strings.ReplaceAll(g.config.Output.Filename, "{package}", pkg.Name()),
-	)
+	output := filepath.Join(g.config.Output.Dir, filename)
 
-	if err := g.writer.Write(file, path); err != nil {
+	if err := g.writer.Write(fset, file, output); err != nil {
 		return fmt.Errorf("writing file: %w", err)
 	}
 
