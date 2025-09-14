@@ -105,7 +105,6 @@ moldable version
 
 Re-run `moldable` whenever the upstream code changes; imports and file lists are recalculated automatically.
 
---------------------------------------------------
 ## Configuration
 
 The file `moldable.yaml` is created by `moldable init` command.
