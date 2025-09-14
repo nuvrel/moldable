@@ -21,15 +21,15 @@ Most mock generators need an interface to do anything. When a library only expos
 
 ## Features
 
-- Processes entire packages in one command. No need to list every struct; `moldable` automatically finds every exported struct that has methods and builds the matching interface.
-- Keeps every setting in a single YAML file so you can generate many packages at once, choose where files land, decide how interfaces are named, and commit that file to version control for identical results on any machine.
-- Uses Go's official `go/ast` and `go/types` packages, so the generated file is always syntactically correct.
-- Renders every method signature exactly as found in the source (parameter names, types, results, variadic dots).
-- Supports generics: type parameters on structs and methods are reproduced with their constraints.
-- Preserves type aliases, pointers, slices, maps, channels, embedded structs and any nested combination of them.
-- Builds the correct import block automatically, choosing non-conflicting local aliases when the same base name appears from different packages.
-- Relies on Go's native package loader, so it honours `go.mod` boundaries, works with vendored code, Go workspaces, and private modules without extra flags.
-- Lets you tailor the printed code: pick the package name that appears in generated files, use template names like `{package}.generated.go`, add a suffix (`Client` → `ClientContract`), and place everything in a clean output directory tree.
+- **One-command package processing:** Processes entire packages in a single run. Every exported struct that carries methods is discovered automatically and turned into the corresponding interface.
+- **Single YAML control:** Keeps every setting in one committed YAML file so you can generate many packages at once, choose output locations, decide how interfaces are named, and reproduce identical results on any machine.
+- **Official Go parser:** Uses Go's standard `go/ast` and `go/types` packages, guaranteeing the generated file is always syntactically correct.
+- **Exact method reproduction:** Renders every method signature exactly as found in the source (parameter names, types, results, and variadic dots included).
+- **Full generics support:** Type parameters on structs and methods are reproduced together with their constraints.
+- **Rich type preservation:** Preserves type aliases, pointers, slices, maps, channels, embedded structs, and any nested combination of them.
+- **Automatic import block:** Builds the correct import section and picks non-conflicting local aliases when the same base name comes from different packages.
+- **Native module loading:** Relies on Go's package loader, so it respects `go.mod` boundaries, works with vendored code, Go workspaces, and private modules without extra flags.
+- **Customisable output:** Choose the package name for generated files, use template names like `{package}.generated.go`, add a suffix (`Client` → `ClientContract`), and place everything in a clean output directory tree.
 
 ## Installation
 
@@ -61,8 +61,10 @@ go install github.com/nuvrel/moldable/cmd/moldable@latest
 Pin to a specific version (**recommended**):
 
 ```bash
-go install github.com/nuvrel/moldable/cmd/moldable@v1.0.0
+go install github.com/nuvrel/moldable/cmd/moldable@<tag>
 ```
+
+> Replace `<tag>` with the desired tag (i.e. `v1.0.0`).
 
 Check the result:
 
@@ -146,7 +148,7 @@ packages:
 Here are the validation rules:
 
 | Field | Requirement |
-|-------|-------------|
+| - | - |
 | `output.dir` | non-empty string |
 | `output.package` | valid Go identifier |
 | `output.filename` | must contain substring `{package}` |
