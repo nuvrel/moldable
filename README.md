@@ -8,6 +8,10 @@
 
 `moldable` builds precise interfaces from any package so you can plug in `mockery`, `gomock`, `moq`, or any other mock tool you like.
 
+| ![Example](./.github/example.png) |
+| :--: |
+| *Example: every exported AWS S3 struct becomes its own ready-to-use interface.* |
+
 > [!WARNING]
 > This project is in active development and may contain bugs or breaking changes. We recommend testing thoroughly in your environment before using in production. Issues and contributions are welcome!
 
