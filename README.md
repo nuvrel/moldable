@@ -8,12 +8,14 @@
 
 `moldable` builds precise interfaces from any package so you can plug in `mockery`, `gomock`, `moq`, or any other mock tool you like.
 
+> [!WARNING]
+> `moldable` is just an experiment. I built it to learn Go AST for another open source project that will take up most of my time.
+>
+> It works well, but I am not sure lots of people really need it (to be honest). If you try it, feel free to open an issue and tell me how it went, good or bad.
+
 | ![Example](./.github/example.png) |
 | :--: |
 | *Example: every exported AWS S3 struct becomes its own ready-to-use interface.* |
-
-> [!WARNING]
-> This project is in active development and may contain bugs or breaking changes. We recommend testing thoroughly in your environment before using in production. Issues and contributions are welcome!
 
 ## Why?
 
